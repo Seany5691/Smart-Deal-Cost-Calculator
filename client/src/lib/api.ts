@@ -201,11 +201,22 @@ export const configAPI = {
   updateFactors: async (factors: any) => {
     console.log('API: sending factors update to server:', JSON.stringify(factors));
     try {
+      // Use the same pattern as other successful API calls
       const response = await api.put('/api/factors', factors);
+      
+      // Cache the factors in localStorage for offline use
+      localStorage.setItem('factors_cache', JSON.stringify(factors));
+      
       console.log('API: server response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error updating factors:', error);
+      
+      // Store pending changes for later sync
+      const pendingChanges = JSON.parse(localStorage.getItem('pending_changes') || '[]');
+      pendingChanges.push({ type: 'factors', data: factors });
+      localStorage.setItem('pending_changes', JSON.stringify(pendingChanges));
+      
       throw error;
     }
   },

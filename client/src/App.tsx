@@ -78,12 +78,6 @@ function App() {
         {/* Offline alert */}
         {!isOnline && <OfflineAlert />}
 
-        {/* Debug info - can be removed in production */}
-        <div className="fixed top-4 right-4 bg-white p-2 border rounded shadow z-50">
-          <div>Auth: {isAuthenticated ? 'Yes' : 'No'}</div>
-          <div>Online: {isOnline ? 'Yes' : 'No'}</div>
-        </div>
-
         {/* Main content */}
         <div className="flex-1 pt-16">
           <Routes>
