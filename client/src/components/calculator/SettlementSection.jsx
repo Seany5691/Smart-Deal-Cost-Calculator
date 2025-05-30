@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MdArrowBack, MdArrowForward } from 'react-icons/md';
+import { MdArrowBack, MdArrowForward, MdToggleOn, MdToggleOff } from 'react-icons/md';
 import { useCalculatorStore } from '@/store/calculator';
 import { formatCurrency } from '@/utils';
 
@@ -7,6 +7,7 @@ import { formatCurrency } from '@/utils';
 
 const SettlementSection = ({ onNext, onPrev }) => {
   const { updateDealDetails } = useCalculatorStore();
+  const [hasSettlement, setHasSettlement] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [rentalAmount, setRentalAmount] = useState('');
   const [escalationRate, setEscalationRate] = useState('0');
@@ -135,9 +136,26 @@ const SettlementSection = ({ onNext, onPrev }) => {
     return date.toLocaleDateString();
   };
 
+  // Toggle settlement on/off
+  const toggleSettlement = () => {
+    setHasSettlement(!hasSettlement);
+    if (!hasSettlement) {
+      // If turning settlement back on, don't change anything
+    } else {
+      // If turning settlement off, set settlement to 0
+      setTotalSettlement(0);
+      updateDealDetails({ settlement: 0 });
+    }
+  };
+
   // Handle save and navigate to next section
   const handleSave = () => {
-    if (totalSettlement > 0) {
+    if (!hasSettlement) {
+      // If settlement is disabled, just set to 0 and proceed
+      updateDealDetails({ settlement: 0 });
+      onNext();
+    } else if (totalSettlement > 0) {
+      // If settlement is enabled and calculated
       updateDealDetails({ settlement: totalSettlement });
       
       setToast({
@@ -149,6 +167,7 @@ const SettlementSection = ({ onNext, onPrev }) => {
       
       onNext();
     } else {
+      // If settlement is enabled but not calculated
       setToast({
         show: true,
         title: 'Warning',
@@ -168,11 +187,24 @@ const SettlementSection = ({ onNext, onPrev }) => {
         </div>
       )}
 
-      <h2 className="text-xl font-semibold mb-6">
-        Settlement Calculator
-      </h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold">
+          Settlement Calculator
+        </h2>
+        <div className="flex items-center">
+          <span className="mr-2">Settlement</span>
+          <button 
+            type="button" 
+            onClick={toggleSettlement} 
+            className="text-3xl text-primary-600 focus:outline-none"
+            aria-label={hasSettlement ? "Disable settlement" : "Enable settlement"}
+          >
+            {hasSettlement ? <MdToggleOn /> : <MdToggleOff />}
+          </button>
+        </div>
+      </div>
 
-      <div className="mb-6">
+      <div className="mb-6" style={{ opacity: hasSettlement ? 1 : 0.5, pointerEvents: hasSettlement ? 'auto' : 'none' }}>
         <div className="flex flex-col md:flex-row gap-4 mb-4">
           <div className="flex-1 form-group">
             <label className="label" htmlFor="startDate">Start Date</label>
@@ -276,9 +308,9 @@ const SettlementSection = ({ onNext, onPrev }) => {
           <div className="flex-1 flex items-end">
             <button
               type="button"
-              className={`btn w-full ${!startDate || !isValidNumber(rentalAmount) ? 'bg-gray-300 cursor-not-allowed' : 'btn-primary'}`}
+              className={`btn w-full ${!startDate || !isValidNumber(rentalAmount) || !hasSettlement ? 'bg-gray-300 cursor-not-allowed' : 'btn-primary'}`}
               onClick={calculateSettlement}
-              disabled={!startDate || !isValidNumber(rentalAmount)}
+              disabled={!startDate || !isValidNumber(rentalAmount) || !hasSettlement}
             >
               Calculate Settlement
             </button>
@@ -331,9 +363,9 @@ const SettlementSection = ({ onNext, onPrev }) => {
         </button>
         <button
           type="button"
-          className={`btn flex items-center ${totalSettlement <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'btn-primary'}`}
+          className={`btn flex items-center ${hasSettlement && totalSettlement <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'btn-primary'}`}
           onClick={handleSave}
-          disabled={totalSettlement <= 0}
+          disabled={hasSettlement && totalSettlement <= 0}
         >
           Next: Total Costs
           <MdArrowForward className="ml-2" />
