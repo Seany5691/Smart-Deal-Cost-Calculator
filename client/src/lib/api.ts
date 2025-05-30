@@ -13,24 +13,48 @@ interface ImportMeta {
 // Important: We use the root URL without /api prefix
 const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 console.log('Using backend URL:', BACKEND_URL);
+console.log('Environment variables:', import.meta.env);
+
+// Add a timestamp to bust cache
+const timestamp = new Date().getTime();
 
 const api = axios.create({
   baseURL: BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
   },
+  params: {
+    _t: timestamp
+  }
 });
 
-// Add token to requests if available
+// Add token to requests if available and log all requests
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log(`API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, config);
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('API Request Error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Log all responses
+api.interceptors.response.use(
+  (response) => {
+    console.log(`API Response: ${response.status} ${response.config.url}`, response.data);
+    return response;
+  },
+  (error) => {
+    console.error('API Response Error:', error.response || error);
+    return Promise.reject(error);
+  }
 );
 
 // Authentication API
