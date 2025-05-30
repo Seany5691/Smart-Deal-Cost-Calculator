@@ -1,5 +1,14 @@
 import axios from 'axios';
 
+// Define Vite environment variables type
+interface ImportMetaEnv {
+  readonly VITE_API_URL: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 // Create axios instance with base URL
 // Important: We use the root URL without /api prefix
 const api = axios.create({

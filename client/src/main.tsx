@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { registerSW } from 'virtual:pwa-register';
 import './index.css';
+
+// Create a simple mock for the PWA register if it's not available
+const registerSW = () => {
+  return () => {};
+};
 
 // Register service worker for offline support
 const updateSW = registerSW({

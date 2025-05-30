@@ -375,7 +375,7 @@ export const useCalculatorStore = create<CalculatorState>()(
               items: [],
             },
           ],
-          factors: [],
+          factors: {} as FactorData,
           totals: {
             hardwareTotal: 0,
             connectivityTotal: 0,
