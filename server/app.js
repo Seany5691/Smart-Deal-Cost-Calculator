@@ -7,9 +7,20 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 
-const DATA_DIR = process.env.NODE_ENV === 'production' ? '/opt/data' : path.join(__dirname, 'config');
+// In production, use a directory that Render allows access to
+let DATA_DIR = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, 'data') 
+  : path.join(__dirname, 'config');
+
+// Create the data directory if it doesn't exist
 if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  } catch (err) {
+    console.error(`Error creating data directory: ${err.message}`);
+    // Fallback to using the config directory even in production
+    DATA_DIR = path.join(__dirname, 'config');
+  }
 }
 const CONFIG_PATH = path.join(DATA_DIR, 'config.json');
 const USERS_PATH = path.join(DATA_DIR, 'users.json');
@@ -25,7 +36,21 @@ app.get('/healthz', (req, res) => {
 
 // Helper: Read config
 function readConfig() {
-  return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+  try {
+    return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+  } catch (err) {
+    // If file doesn't exist, copy from config directory
+    if (err.code === 'ENOENT' && process.env.NODE_ENV === 'production') {
+      const defaultConfigPath = path.join(__dirname, 'config', 'config.json');
+      if (fs.existsSync(defaultConfigPath)) {
+        const defaultConfig = fs.readFileSync(defaultConfigPath, 'utf8');
+        fs.writeFileSync(CONFIG_PATH, defaultConfig, 'utf8');
+        return JSON.parse(defaultConfig);
+      }
+    }
+    // Return empty object if file doesn't exist
+    return {};
+  }
 }
 // Helper: Write config
 function writeConfig(data) {
@@ -33,8 +58,32 @@ function writeConfig(data) {
 }
 // Helper: Read users
 function readUsers() {
-  if (!fs.existsSync(USERS_PATH)) return [];
-  return JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
+  try {
+    if (!fs.existsSync(USERS_PATH)) {
+      // If file doesn't exist, copy from config directory in production
+      if (process.env.NODE_ENV === 'production') {
+        const defaultUsersPath = path.join(__dirname, 'config', 'users.json');
+        if (fs.existsSync(defaultUsersPath)) {
+          const defaultUsers = fs.readFileSync(defaultUsersPath, 'utf8');
+          fs.writeFileSync(USERS_PATH, defaultUsers, 'utf8');
+          return JSON.parse(defaultUsers);
+        }
+      }
+      // If no default file, create a default admin user
+      const defaultUsers = [{
+        id: '1',
+        username: 'admin',
+        password: 'admin123',
+        role: 'admin'
+      }];
+      fs.writeFileSync(USERS_PATH, JSON.stringify(defaultUsers, null, 2), 'utf8');
+      return defaultUsers;
+    }
+    return JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
+  } catch (err) {
+    console.error(`Error reading users: ${err.message}`);
+    return [];
+  }
 }
 // Helper: Write users
 function writeUsers(data) {
