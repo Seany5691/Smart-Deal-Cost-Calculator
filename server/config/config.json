@@ -1,0 +1,210 @@
+{
+  "scales": {
+    "installation": {
+      "0-4": 500,
+      "5-8": 3500,
+      "9-16": 7000,
+      "17-32": 10500,
+      "33+": 15000
+    },
+    "finance_fee": {
+      "0-20000": 1000,
+      "20001-50000": 1000,
+      "50001-100000": 2000,
+      "100001+": 3000
+    },
+    "gross_profit": {
+      "0-4": 15000,
+      "5-8": 20001,
+      "9-16": 25000,
+      "17-32": 30000,
+      "33+": 35000
+    },
+    "additional_costs": {
+      "cost_per_kilometer": 1,
+      "cost_per_point": 450
+    }
+  },
+  "hardware": [
+    {
+      "id": "hw1",
+      "name": "Yealink T31P (B&W desk- excludes PSU)",
+      "cost": 1200.02,
+      "locked": false,
+      "quantity": 0,
+      "isExtension": true
+    },
+    {
+      "id": "hw2",
+      "name": "Yealink T34W (Colour desk- includes PSU)",
+      "cost": 1800,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "hw3",
+      "name": "Yealink T43U Switchboard (B&W- excludes PSU)",
+      "cost": 2500,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "hw4",
+      "name": "Yealink T44U Switchboard (Colour- excludes PSU)",
+      "cost": 3000,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "hw5",
+      "name": "Yealink W73P Cordless (Handset & base)",
+      "cost": 2200,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "hw6",
+      "name": "Yealink W73H (Handset only)",
+      "cost": 1200,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "hw7",
+      "name": "Additional Mobile App",
+      "cost": 500,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "hw1748601737692",
+      "name": "Phone",
+      "cost": 1550.03,
+      "quantity": 0,
+      "locked": false,
+      "isExtension": true
+    }
+  ],
+  "connectivity": [
+    {
+      "id": "conn1",
+      "name": "MTN APN",
+      "cost": 299.01,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "conn2",
+      "name": "Vodacom APN",
+      "cost": 349,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "conn3",
+      "name": "Rain",
+      "cost": 249,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "conn4",
+      "name": "Fibre 50/50",
+      "cost": 699,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "conn5",
+      "name": "Fibre 100/100",
+      "cost": 899,
+      "locked": false,
+      "quantity": 0
+    }
+  ],
+  "licensing": [
+    {
+      "id": "lic1",
+      "name": "Premium License",
+      "cost": 299.01,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "lic2",
+      "name": "Standard License",
+      "cost": 199,
+      "locked": false,
+      "quantity": 0
+    },
+    {
+      "id": "lic3",
+      "name": "Custom License",
+      "cost": 249,
+      "locked": false,
+      "quantity": 0
+    }
+  ],
+  "factors": {
+    "36_months": {
+      "0%": {
+        "0-20000": 0.03894,
+        "20001-50000": 0.03761,
+        "50001-100000": 0.03641,
+        "100000+": 0.03561
+      },
+      "10%": {
+        "0-20000": 0.04012,
+        "20001-50000": 0.03882,
+        "50001-100000": 0.03762,
+        "100000+": 0.03682
+      },
+      "15%": {
+        "0-20000": 0.04133,
+        "20001-50000": 0.04003,
+        "50001-100000": 0.03883,
+        "100000+": 0.03803
+      }
+    },
+    "48_months": {
+      "0%": {
+        "0-20000": 0.03133,
+        "20001-50000": 0.03003,
+        "50001-100000": 0.02883,
+        "100000+": 0.02803
+      },
+      "10%": {
+        "0-20000": 0.03254,
+        "20001-50000": 0.03124,
+        "50001-100000": 0.03004,
+        "100000+": 0.02924
+      },
+      "15%": {
+        "0-20000": 0.03375,
+        "20001-50000": 0.03245,
+        "50001-100000": 0.03125,
+        "100000+": 0.03045
+      }
+    },
+    "60_months": {
+      "0%": {
+        "0-20000": 0.02695,
+        "20001-50000": 0.02565,
+        "50001-100000": 0.02446,
+        "100000+": 0.02365
+      },
+      "10%": {
+        "0-20000": 0.02816,
+        "20001-50000": 0.02686,
+        "50001-100000": 0.02566,
+        "100000+": 0.02486
+      },
+      "15%": {
+        "0-20000": 0.02937,
+        "20001-50000": 0.02807,
+        "50001-100000": 0.02687,
+        "100000+": 0.02607
+      }
+    }
+  }
+}
