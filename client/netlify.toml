@@ -9,3 +9,6 @@
 
 [build.environment]
   NODE_VERSION = "18.19.1"
+  PYTHON_VERSION = "3.9.18"
+  RUBY_VERSION = "3.2.2"
+  GO_VERSION = "1.21.0"
