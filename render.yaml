@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: smart-deal-cost-calculator-api
+    env: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && node app.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+    disk:
+      name: data
+      mountPath: /opt/data
+      sizeGB: 1

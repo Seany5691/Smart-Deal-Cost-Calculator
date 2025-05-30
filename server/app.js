@@ -7,12 +7,21 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 
-const CONFIG_PATH = path.join(__dirname, 'config', 'config.json');
-const USERS_PATH = path.join(__dirname, 'config', 'users.json');
+const DATA_DIR = process.env.NODE_ENV === 'production' ? '/opt/data' : path.join(__dirname, 'config');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+const CONFIG_PATH = path.join(DATA_DIR, 'config.json');
+const USERS_PATH = path.join(DATA_DIR, 'users.json');
 const SECRET = process.env.JWT_SECRET || 'smartdeal_secret';
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Health check endpoint
+app.get('/healthz', (req, res) => {
+  res.status(200).json({ status: 'healthy' });
+});
 
 // Helper: Read config
 function readConfig() {
@@ -189,11 +198,11 @@ app.put('/api/api/factors', authenticateToken, requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-// Serve frontend (for production)
-app.use(express.static(path.join(__dirname, '../client/dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
+// Configure CORS for production
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+}));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
