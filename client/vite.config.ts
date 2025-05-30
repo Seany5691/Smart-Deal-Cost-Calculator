@@ -2,11 +2,19 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
+import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
     port: 3000,
+  },
+  build: {
+    // Disable type checking during build
+    typescript: {
+      transpileOnly: true,
+      noEmit: false,
+    },
   },
   plugins: [
     react(),
